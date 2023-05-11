@@ -1,0 +1,47 @@
+CREATE SCHEMA air_quality;
+
+CREATE TABLE air_quality.date_dim ( 
+	date_id              bigint  NOT NULL  ,
+	time_period          bigint    ,
+	start_date           date    ,
+	year               bigint    ,
+	month              varchar(100)    ,
+	day               varchar(100)    ,
+	hour               varchar(100)    ,
+	quarter              varchar(100)    ,
+	CONSTRAINT pk_date_dim PRIMARY KEY ( date_id )
+ );
+
+
+CREATE TABLE air_quality.geography_dim ( 
+	geography_id         bigint  NOT NULL  ,
+	geo_type_name        varchar(100)    ,
+	geo_join_id          bigint    ,
+	geo_place_name       bigint    ,
+	CONSTRAINT pk_geography_dim PRIMARY KEY ( geography_id )
+ );
+
+CREATE TABLE air_quality.indicator_dim ( 
+	indicator_id         bigint  NOT NULL  ,
+	name                 varchar(100)    ,
+	measure              varchar(100)    ,
+	measure_info         varchar(100)    ,
+	CONSTRAINT pk_infdicator_dim PRIMARY KEY ( indicator_id )
+ );
+
+CREATE TABLE air_quality.fact ( 
+	fact_id              bigint  NOT NULL  ,
+	data_value           varchar(100)    ,
+	message              varchar(100)    ,
+	unqiue_id            bigint    ,
+	indicator          bigint  NOT NULL  ,
+	date               bigint  NOT NULL  ,
+	geography            bigint  NOT NULL  ,
+	CONSTRAINT pk_fact PRIMARY KEY ( fact_id )
+ );
+
+ALTER TABLE fact ADD CONSTRAINT fk_indicator_dim FOREIGN KEY ( indicator ) REFERENCES air_quality.indicator_dim( indicator_id );
+
+ALTER TABLE fact ADD CONSTRAINT fk_geography_dim FOREIGN KEY ( geography ) REFERENCES air_quality.geography_dim( geography_id );
+
+ALTER TABLE fact ADD CONSTRAINT fk_date_dim FOREIGN KEY ( date ) REFERENCES air_quality.date_dim( date_id );
